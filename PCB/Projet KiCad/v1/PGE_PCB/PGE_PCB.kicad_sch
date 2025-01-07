@@ -4946,12 +4946,13 @@
 					(hide yes)
 				)
 			)
-			(property "Description" ""
+			(property "Description" "STPS2L30A, Schottky Diode,  2A max, 30V, 2-Pin, SMA"
 				(at 0 0 0)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
+					(justify bottom)
 					(hide yes)
 				)
 			)
@@ -4976,16 +4977,6 @@
 				)
 			)
 			(property "MOUSER_PRICE-STOCK" "https://www.mouser.co.uk/ProductDetail/STMicroelectronics/STPS2L30A?qs=yAkVQ3mwCG0OEYUK4%252B3dww%3D%3D"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(justify bottom)
-					(hide yes)
-				)
-			)
-			(property "DESCRIPTION" "STPS2L30A, Schottky Diode,  2A max, 30V, 2-Pin, SMA"
 				(at 0 0 0)
 				(effects
 					(font
@@ -6110,6 +6101,10 @@
 		(color 0 0 0 0)
 		(uuid "f1e9f5d9-1ef9-4437-9bbf-16dd914b82a7")
 	)
+	(no_connect
+		(at 251.46 26.67)
+		(uuid "e35acce5-7b6b-465e-a0dd-20a94c8d884f")
+	)
 	(wire
 		(pts
 			(xy 57.15 148.59) (xy 63.5 148.59)
@@ -7220,7 +7215,7 @@
 			(uuid "40dfc68b-c5fd-4c11-813e-8e97276000f2")
 		)
 		(instances
-			(project ""
+			(project "PGE_PCB"
 				(path "/503a3176-3dc5-409a-9acd-b4c6a6fcf256"
 					(reference "Y1")
 					(unit 1)
@@ -7286,7 +7281,7 @@
 			(uuid "8ce8d004-fd71-43a8-bca4-1ef5a2999fda")
 		)
 		(instances
-			(project ""
+			(project "PGE_PCB"
 				(path "/503a3176-3dc5-409a-9acd-b4c6a6fcf256"
 					(reference "#PWR011")
 					(unit 1)
@@ -7548,7 +7543,7 @@
 			(uuid "7133bcbf-8eef-4b65-8c4d-712ddf0d8b61")
 		)
 		(instances
-			(project ""
+			(project "PGE_PCB"
 				(path "/503a3176-3dc5-409a-9acd-b4c6a6fcf256"
 					(reference "U1")
 					(unit 1)
@@ -7673,7 +7668,7 @@
 			(uuid "71a20fae-2cce-4e03-bdfd-875efb19d7b9")
 		)
 		(instances
-			(project ""
+			(project "PGE_PCB"
 				(path "/503a3176-3dc5-409a-9acd-b4c6a6fcf256"
 					(reference "U3")
 					(unit 1)
@@ -7774,7 +7769,7 @@
 			(uuid "eebfa260-70a9-458e-8a53-cabb7afd26ec")
 		)
 		(instances
-			(project ""
+			(project "PGE_PCB"
 				(path "/503a3176-3dc5-409a-9acd-b4c6a6fcf256"
 					(reference "P1")
 					(unit 1)
@@ -7912,7 +7907,7 @@
 			(uuid "4aec3fd6-12bd-463b-a8f0-e2084d53040b")
 		)
 		(instances
-			(project ""
+			(project "PGE_PCB"
 				(path "/503a3176-3dc5-409a-9acd-b4c6a6fcf256"
 					(reference "C3")
 					(unit 1)
@@ -8064,7 +8059,7 @@
 			(uuid "b27eb75e-dfa6-40e0-a779-f431b178553d")
 		)
 		(instances
-			(project ""
+			(project "PGE_PCB"
 				(path "/503a3176-3dc5-409a-9acd-b4c6a6fcf256"
 					(reference "Q2")
 					(unit 1)
@@ -8130,7 +8125,7 @@
 			(uuid "b8d563b0-322e-4026-aa31-db92513bc487")
 		)
 		(instances
-			(project ""
+			(project "PGE_PCB"
 				(path "/503a3176-3dc5-409a-9acd-b4c6a6fcf256"
 					(reference "#PWR08")
 					(unit 1)
@@ -8197,7 +8192,7 @@
 			(uuid "296d87e0-b4d6-4712-9d45-907ffd4f16e1")
 		)
 		(instances
-			(project ""
+			(project "PGE_PCB"
 				(path "/503a3176-3dc5-409a-9acd-b4c6a6fcf256"
 					(reference "C1")
 					(unit 1)
@@ -8400,7 +8395,7 @@
 			(uuid "950a4cad-ec34-4332-81f8-b5a80ccff226")
 		)
 		(instances
-			(project ""
+			(project "PGE_PCB"
 				(path "/503a3176-3dc5-409a-9acd-b4c6a6fcf256"
 					(reference "R1")
 					(unit 1)
@@ -8533,7 +8528,7 @@
 			(uuid "6d3c3690-1346-4821-9703-1daa89b973ba")
 		)
 		(instances
-			(project ""
+			(project "PGE_PCB"
 				(path "/503a3176-3dc5-409a-9acd-b4c6a6fcf256"
 					(reference "#PWR03")
 					(unit 1)
@@ -8609,7 +8604,7 @@
 			(uuid "754ca703-2487-4a5e-952b-f7a7b7f89f17")
 		)
 		(instances
-			(project ""
+			(project "PGE_PCB"
 				(path "/503a3176-3dc5-409a-9acd-b4c6a6fcf256"
 					(reference "Q1")
 					(unit 1)
@@ -8812,7 +8807,7 @@
 			(uuid "b03ceebf-e75a-4e71-98b8-9a44e803fd93")
 		)
 		(instances
-			(project ""
+			(project "PGE_PCB"
 				(path "/503a3176-3dc5-409a-9acd-b4c6a6fcf256"
 					(reference "D2")
 					(unit 1)
@@ -8878,7 +8873,7 @@
 			(uuid "386c9455-3e00-4420-95c2-7fa9d9441796")
 		)
 		(instances
-			(project ""
+			(project "PGE_PCB"
 				(path "/503a3176-3dc5-409a-9acd-b4c6a6fcf256"
 					(reference "#PWR07")
 					(unit 1)
@@ -9013,7 +9008,7 @@
 			(uuid "d300bbeb-fcc2-435a-a88e-0af65c8dd8a7")
 		)
 		(instances
-			(project ""
+			(project "PGE_PCB"
 				(path "/503a3176-3dc5-409a-9acd-b4c6a6fcf256"
 					(reference "#PWR012")
 					(unit 1)
@@ -9084,7 +9079,7 @@
 			(uuid "f055de77-49a1-47f0-8bc4-ea0a690ba6de")
 		)
 		(instances
-			(project ""
+			(project "PGE_PCB"
 				(path "/503a3176-3dc5-409a-9acd-b4c6a6fcf256"
 					(reference "U2")
 					(unit 1)
@@ -9150,7 +9145,7 @@
 			(uuid "50d7f09a-0e3d-43e1-81b0-c840abffa3df")
 		)
 		(instances
-			(project ""
+			(project "PGE_PCB"
 				(path "/503a3176-3dc5-409a-9acd-b4c6a6fcf256"
 					(reference "#PWR010")
 					(unit 1)
@@ -9217,7 +9212,7 @@
 			(uuid "989b2cf2-bb3c-4241-98ee-fadd98bb6a4c")
 		)
 		(instances
-			(project ""
+			(project "PGE_PCB"
 				(path "/503a3176-3dc5-409a-9acd-b4c6a6fcf256"
 					(reference "#PWR01")
 					(unit 1)
@@ -9283,7 +9278,7 @@
 			(uuid "17919605-68cd-433f-a18a-88e888b7c21b")
 		)
 		(instances
-			(project ""
+			(project "PGE_PCB"
 				(path "/503a3176-3dc5-409a-9acd-b4c6a6fcf256"
 					(reference "#PWR04")
 					(unit 1)
@@ -9483,7 +9478,7 @@
 			(uuid "15ce780f-49d9-4180-aad8-964301c2412d")
 		)
 		(instances
-			(project ""
+			(project "PGE_PCB"
 				(path "/503a3176-3dc5-409a-9acd-b4c6a6fcf256"
 					(reference "#PWR06")
 					(unit 1)
@@ -9550,7 +9545,7 @@
 			(uuid "3f39f7ad-ae2b-41d4-be57-02323d7b104d")
 		)
 		(instances
-			(project ""
+			(project "PGE_PCB"
 				(path "/503a3176-3dc5-409a-9acd-b4c6a6fcf256"
 					(reference "R3")
 					(unit 1)
@@ -9727,7 +9722,7 @@
 			(uuid "2f06e68b-d211-4787-b150-cfd6d8197351")
 		)
 		(instances
-			(project ""
+			(project "PGE_PCB"
 				(path "/503a3176-3dc5-409a-9acd-b4c6a6fcf256"
 					(reference "J2")
 					(unit 1)
@@ -9997,7 +9992,7 @@
 			(uuid "9847d2dc-16ea-4857-b66e-8e989076b887")
 		)
 		(instances
-			(project ""
+			(project "PGE_PCB"
 				(path "/503a3176-3dc5-409a-9acd-b4c6a6fcf256"
 					(reference "U4")
 					(unit 1)
@@ -10138,7 +10133,7 @@
 			(uuid "7d7606f6-1d96-4a00-b4da-51723f9d3d13")
 		)
 		(instances
-			(project ""
+			(project "PGE_PCB"
 				(path "/503a3176-3dc5-409a-9acd-b4c6a6fcf256"
 					(reference "J1")
 					(unit 1)
@@ -10367,7 +10362,7 @@
 			(uuid "79751486-ccf9-428f-a32c-8cf3aa0d6fee")
 		)
 		(instances
-			(project ""
+			(project "PGE_PCB"
 				(path "/503a3176-3dc5-409a-9acd-b4c6a6fcf256"
 					(reference "D1")
 					(unit 1)
@@ -10433,7 +10428,7 @@
 			(uuid "d5112df6-500a-48ed-a059-da0080d94674")
 		)
 		(instances
-			(project ""
+			(project "PGE_PCB"
 				(path "/503a3176-3dc5-409a-9acd-b4c6a6fcf256"
 					(reference "#PWR05")
 					(unit 1)
@@ -10499,10 +10494,48 @@
 			(uuid "8d64e430-4848-4f74-9b9b-3812e105f2fe")
 		)
 		(instances
-			(project ""
+			(project "PGE_PCB"
 				(path "/503a3176-3dc5-409a-9acd-b4c6a6fcf256"
 					(reference "#PWR09")
 					(unit 1)
+				)
+			)
+		)
+	)
+	(sheet
+		(at 17.78 20.32)
+		(size 57.15 21.59)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "7b7c49ad-28b8-4456-8a93-99baeb169400")
+		(property "Sheetname" "ALIMENTATION"
+			(at 17.78 19.6084 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Alimentation.kicad_sch"
+			(at 17.78 42.4946 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "PGE_PCB"
+				(path "/503a3176-3dc5-409a-9acd-b4c6a6fcf256"
+					(page "2")
 				)
 			)
 		)
