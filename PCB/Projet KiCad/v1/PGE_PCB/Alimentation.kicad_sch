@@ -1222,6 +1222,127 @@
 				)
 			)
 		)
+		(symbol "Device:R"
+			(pin_numbers hide)
+			(pin_names
+				(offset 0)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "R"
+				(at 2.032 0 90)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "R"
+				(at 0 0 90)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at -1.778 0 90)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" "~"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" "Resistor"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_keywords" "R res resistor"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_fp_filters" "R_*"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "R_0_1"
+				(rectangle
+					(start -1.016 -2.54)
+					(end 1.016 2.54)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "R_1_1"
+				(pin passive line
+					(at 0 3.81 270)
+					(length 1.27)
+					(name "~"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 0 -3.81 90)
+					(length 1.27)
+					(name "~"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+		)
 		(symbol "Diode:1N4007"
 			(pin_numbers hide)
 			(pin_names hide)
@@ -2801,6 +2922,12 @@
 		(uuid "39fe65a6-2286-41a0-95b3-e2386bab2940")
 	)
 	(junction
+		(at 215.9 72.39)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "3f971168-4221-4d11-86f5-163918bc08e4")
+	)
+	(junction
 		(at 62.23 85.09)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -2966,7 +3093,7 @@
 	)
 	(wire
 		(pts
-			(xy 219.71 72.39) (xy 212.09 72.39)
+			(xy 219.71 72.39) (xy 215.9 72.39)
 		)
 		(stroke
 			(width 0)
@@ -3116,6 +3243,16 @@
 	)
 	(wire
 		(pts
+			(xy 215.9 60.96) (xy 215.9 62.23)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "724f7b91-7b91-4552-aa39-c85d5efbadf8")
+	)
+	(wire
+		(pts
 			(xy 88.9 99.06) (xy 88.9 100.33)
 		)
 		(stroke
@@ -3143,6 +3280,16 @@
 			(type default)
 		)
 		(uuid "7d79cd0a-717b-4f80-8de3-bb944f891ebb")
+	)
+	(wire
+		(pts
+			(xy 215.9 72.39) (xy 212.09 72.39)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "81fed65a-9a38-4857-9d96-e3543fb62b54")
 	)
 	(wire
 		(pts
@@ -3273,6 +3420,16 @@
 			(type default)
 		)
 		(uuid "d187c7bd-bce8-4a2e-9ed0-5748d85da457")
+	)
+	(wire
+		(pts
+			(xy 215.9 69.85) (xy 215.9 72.39)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "d1baffdc-0d34-4453-b4e9-84a844fadac8")
 	)
 	(wire
 		(pts
@@ -3471,6 +3628,73 @@
 				(path "/503a3176-3dc5-409a-9acd-b4c6a6fcf256/7b7c49ad-28b8-4456-8a93-99baeb169400"
 					(reference "#PWR021")
 					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "VCC")
+		(at 215.9 60.96 0)
+		(mirror x)
+		(unit 0)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "083c26c2-538a-4b76-8fef-5ea1ae3fd5c1")
+		(property "Reference" "#PWR01"
+			(at 215.9 60.96 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "VCC"
+			(at 214.122 56.896 0)
+			(effects
+				(font
+					(size 1.524 1.524)
+				)
+				(justify left top)
+			)
+		)
+		(property "Footprint" ""
+			(at 215.9 60.96 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 215.9 60.96 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Le symbole d'alimentation crée un label global de nom 'VCC'"
+			(at 215.9 60.96 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "71ae7923-382e-4c3d-a9d4-5503ac8350d7")
+		)
+		(instances
+			(project "Alimentation"
+				(path "/7e6bc5b4-5d5a-4fe9-b3ba-e1e3489293c3"
+					(reference "#PWR01")
+					(unit 0)
 				)
 			)
 		)
@@ -3691,6 +3915,12 @@
 		(instances
 			(project "PGE_PCB"
 				(path "/503a3176-3dc5-409a-9acd-b4c6a6fcf256/7b7c49ad-28b8-4456-8a93-99baeb169400"
+					(reference "R11")
+					(unit 1)
+				)
+			)
+			(project "Alimentation"
+				(path "/7e6bc5b4-5d5a-4fe9-b3ba-e1e3489293c3"
 					(reference "R11")
 					(unit 1)
 				)
@@ -4598,6 +4828,76 @@
 			(project "PGE_PCB"
 				(path "/503a3176-3dc5-409a-9acd-b4c6a6fcf256/7b7c49ad-28b8-4456-8a93-99baeb169400"
 					(reference "#PWR026")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 215.9 66.04 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "7c670669-8768-45cd-9801-50a46b1b0eb1")
+		(property "Reference" "R1"
+			(at 218.44 64.7699 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "4.7k"
+			(at 218.44 67.3099 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric"
+			(at 214.122 66.04 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 215.9 66.04 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Resistor"
+			(at 215.9 66.04 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "42a453f5-5cdf-4712-8045-ce06ad45f771")
+		)
+		(pin "1"
+			(uuid "4137fb4b-b9cd-4a07-812f-811a5e5ed6fa")
+		)
+		(instances
+			(project "Alimentation"
+				(path "/7e6bc5b4-5d5a-4fe9-b3ba-e1e3489293c3"
+					(reference "R1")
 					(unit 1)
 				)
 			)
@@ -6009,6 +6309,11 @@
 					(unit 1)
 				)
 			)
+		)
+	)
+	(sheet_instances
+		(path "/"
+			(page "1")
 		)
 	)
 )
