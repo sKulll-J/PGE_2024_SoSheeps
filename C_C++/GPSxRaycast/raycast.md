@@ -15,6 +15,7 @@ On compte le nombre d'intersections entre le rayonnement et les côtés du polyg
 Considérons un point P et un polygone avec des sommets définis dans un ordre spécifique (horaire ou antihoraire). Le rayon part de P vers la droite.
 
 P•-------------------------------------->
+
                     _______
                    /       \
                   /         \
