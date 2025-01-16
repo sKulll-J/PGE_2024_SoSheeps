@@ -1,0 +1,4 @@
+(sym_lib_table
+  (version 7)
+  (lib (name "LoRa_Breakout")(type "KiCad")(uri "C:/Users/étudiant-e-s/Documents/GitHub/PGE_2024_SoSheeps/PCB/Library Composants/RFM9x/RFM9x.kicad_sym")(options "")(descr ""))
+)
