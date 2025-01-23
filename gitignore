@@ -48,3 +48,6 @@ out/
 
 # Ignore les fichiers exécutables 
 *.exe
+
+# Ignore les archives MagicDraw
+*mdzip.bak
