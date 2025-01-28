@@ -1,9 +1,10 @@
 #ifndef _RADIOLIB_EX_LORAWAN_CONFIG_H
 #define _RADIOLIB_EX_LORAWAN_CONFIG_H
 
-#include <SPI.h> 
 #include <RadioLib.h>
 
+
+// RFM9x pin configuration
 #define MOSI_PIN  PB5   //MOSI Pin
 #define MISO_PIN  PB4   //MISO Pin
 #define SCLK_PIN  PB3   //Clock Pin
@@ -14,38 +15,32 @@
 #define G0_PIN    PB13
 #define G1_PIN    PB14
 
+// radio initialization 
 SPIClass etx_spi( MOSI_PIN, MISO_PIN, SCLK_PIN );
 SPISettings spi_Settings(2000000, MSBFIRST, SPI_MODE0);
 
-// first you have to set your radio model and pin configuration
-// RFM96W + SPI configuration
 SX1276 radio = new Module(CS_PIN, G0_PIN, RST_PIN, G1_PIN, etx_spi, spi_Settings);
-
-// if you have RadioBoards (https://github.com/radiolib-org/RadioBoards)
-// and are using one of the supported boards, you can do the following:
-/*
-#define RADIO_BOARD_AUTO
-#include <RadioBoards.h>
-
-Radio radio = new RadioModule();
-*/
 
 // how often to send an uplink - consider legal & FUP constraints - see notes
 const uint32_t uplinkIntervalSeconds = 5UL * 60UL;    // minutes x seconds
 
-// joinEUI - previous versions of LoRaWAN called this AppEUI
-// for development purposes you can use all zeros - see wiki for details
-#define RADIOLIB_LORAWAN_JOIN_EUI  0x0000000000000000
+// device address - either a development address or one assigned
+// to the LoRaWAN Service Provider - TTN will generate one for you
+#ifndef RADIOLIB_LORAWAN_DEV_ADDR   // Replace with your DevAddr
+#define RADIOLIB_LORAWAN_DEV_ADDR   0x260BE7E2
+#endif
 
-// the Device EUI & two keys can be generated on the TTN console 
-#ifndef RADIOLIB_LORAWAN_DEV_EUI   // Replace with your Device EUI
-#define RADIOLIB_LORAWAN_DEV_EUI   0x70B3D57ED006D44A
+#ifndef RADIOLIB_LORAWAN_FNWKSINT_KEY   // Replace with your FNwkSInt Key 
+#define RADIOLIB_LORAWAN_FNWKSINT_KEY   0xCF, 0x55, 0x5B, 0xC7, 0x5A, 0x58, 0xB8, 0x72, 0xA1, 0x7F, 0x1F, 0xDD, 0x27, 0x34, 0x55, 0x01
 #endif
-#ifndef RADIOLIB_LORAWAN_APP_KEY   // Replace with your App Key 
-#define RADIOLIB_LORAWAN_APP_KEY   0x4D, 0x96, 0x29, 0x2D, 0xC2, 0x07, 0x9A, 0xE6, 0x84, 0x78, 0xB5, 0x90, 0x77, 0x39, 0x8E, 0x29
+#ifndef RADIOLIB_LORAWAN_SNWKSINT_KEY   // Replace with your SNwkSInt Key 
+#define RADIOLIB_LORAWAN_SNWKSINT_KEY   0x55, 0x48, 0x02, 0xBF, 0x51, 0x33, 0xCD, 0xD5, 0x10, 0xCC, 0x1B, 0x92, 0x83, 0x00, 0x64, 0xE2
 #endif
-#ifndef RADIOLIB_LORAWAN_NWK_KEY   // Put your Nwk Key here
-#define RADIOLIB_LORAWAN_NWK_KEY   0xE6, 0x9F, 0xED, 0x8E, 0xFC, 0x44, 0xA7, 0x1C, 0xE4, 0x5F, 0x48, 0x78, 0xB8, 0xF3, 0x5A, 0x9C
+#ifndef RADIOLIB_LORAWAN_NWKSENC_KEY   // Replace with your NwkSEnc Key 
+#define RADIOLIB_LORAWAN_NWKSENC_KEY   0x4B, 0xD2, 0x8A, 0x3D, 0xB3, 0x32, 0x54, 0xC5, 0xAE, 0xDF, 0x30, 0x1B, 0x8B, 0xEE, 0x89, 0xDD
+#endif
+#ifndef RADIOLIB_LORAWAN_APPS_KEY     // Replace with your AppS Key 
+#define RADIOLIB_LORAWAN_APPS_KEY     0x4D, 0x96, 0x29, 0x2D, 0xC2, 0x07, 0x9A, 0xE6, 0x84, 0x78, 0xB5, 0x90, 0x77, 0x39, 0x8E, 0x29
 #endif
 
 // for the curious, the #ifndef blocks allow for automated testing &/or you can
@@ -58,11 +53,12 @@ const uint8_t subBand = 0;  // For US915, change this to 2, otherwise leave on 0
 // ============================================================================
 // Below is to support the sketch - only make changes if the notes say so ...
 
-// copy over the EUI's & keys in to the something that will not compile if incorrectly formatted
-uint64_t joinEUI =   RADIOLIB_LORAWAN_JOIN_EUI;
-uint64_t devEUI  =   RADIOLIB_LORAWAN_DEV_EUI;
-uint8_t appKey[] = { RADIOLIB_LORAWAN_APP_KEY };
-uint8_t nwkKey[] = { RADIOLIB_LORAWAN_NWK_KEY };
+// copy over the keys in to the something that will not compile if incorrectly formatted
+uint32_t devAddr =        RADIOLIB_LORAWAN_DEV_ADDR;
+uint8_t fNwkSIntKey[] = { RADIOLIB_LORAWAN_FNWKSINT_KEY };
+uint8_t sNwkSIntKey[] = { RADIOLIB_LORAWAN_SNWKSINT_KEY };
+uint8_t nwkSEncKey[] =  { RADIOLIB_LORAWAN_NWKSENC_KEY };
+uint8_t appSKey[] =     { RADIOLIB_LORAWAN_APPS_KEY };
 
 // create the LoRaWAN node
 LoRaWANNode node(&radio, &Region, subBand);
