@@ -37,7 +37,7 @@ void setup() {
   delay(5000);  // Give time to switch to the serial monitor
 
   Serial.println("\nSetup ... ");
-
+  
   etx_spi.setSCLK(SCLK_PIN);
   etx_spi.setMOSI(MOSI_PIN);
   etx_spi.setMISO(MISO_PIN);
@@ -67,10 +67,13 @@ void loop() {
   uint16_t value2 = radio.random(2000);
 
   // Build payload byte array
+  /*
   uint8_t uplinkPayload[3];
   uplinkPayload[0] = value1;
   uplinkPayload[1] = highByte(value2);   // See notes for high/lowByte functions
   uplinkPayload[2] = lowByte(value2);
+  */
+  char uplinkPayload[7] = {'c', 'o', 'l', 'o', 's', 's', 'o'};
   
   // Perform an uplink
   int state = node.sendReceive(uplinkPayload, sizeof(uplinkPayload));    

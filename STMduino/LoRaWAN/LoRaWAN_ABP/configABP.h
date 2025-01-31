@@ -3,7 +3,6 @@
 
 #include <RadioLib.h>
 
-
 // RFM9x pin configuration
 #define MOSI_PIN  PB5   //MOSI Pin
 #define MISO_PIN  PB4   //MISO Pin
