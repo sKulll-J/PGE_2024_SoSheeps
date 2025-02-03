@@ -1,5 +1,4 @@
-#ifndef _RADIOLIB_EX_LORAWAN_CONFIG_H
-#define _RADIOLIB_EX_LORAWAN_CONFIG_H
+#pragma once
 
 #include <RadioLib.h>
 
@@ -151,4 +150,22 @@ void arrayDump(uint8_t *buffer, uint16_t len) {
   Serial.println();
 }
 
-#endif
+void radio_init(){
+  etx_spi.setSCLK(SCLK_PIN);
+  etx_spi.setMOSI(MOSI_PIN);
+  etx_spi.setMISO(MISO_PIN);
+  etx_spi.begin(); 
+  pinMode(CS_PIN, OUTPUT); 
+  digitalWrite(CS_PIN, HIGH);
+
+  Serial.println(F("Initialise the radio"));
+  int state = radio.begin();
+  debug(state != RADIOLIB_ERR_NONE, F("Initialise radio failed"), state, true);
+  
+  Serial.println(F("Initialise LoRaWAN Network credentials"));
+  node.beginABP(devAddr, fNwkSIntKey, sNwkSIntKey, nwkSEncKey, appSKey);
+
+  node.activateABP();
+  debug(state != RADIOLIB_ERR_NONE, F("Activate ABP failed"), state, true);
+  Serial.println(F("Radio ready"));
+}

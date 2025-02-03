@@ -29,53 +29,47 @@
 
 */
 
-#include "configABP.h"
+#include "radio.h"
+#include <DFRobot_GNSS.h>
 
+// GPS instanciation
+DFRobot_GNSS_I2C gnss(&Wire ,GNSS_DEVICE_ADDR);
+
+void encodeCoordinates(double latitude, double longitude, uint8_t* payload);
+void GPS_init(DFRobot_GNSS_I2C gnss);
+
+/*==================================  MAIN Program  ==================================
+======================================================================================*/
 void setup() {
   Serial.begin(115200);
   while(!Serial);
   delay(5000);  // Give time to switch to the serial monitor
 
   Serial.println("\nSetup ... ");
-  
-  etx_spi.setSCLK(SCLK_PIN);
-  etx_spi.setMOSI(MOSI_PIN);
-  etx_spi.setMISO(MISO_PIN);
-  etx_spi.begin(); 
-  pinMode(CS_PIN, OUTPUT); 
-  digitalWrite(CS_PIN, HIGH);
 
-  Serial.println(F("Initialise the radio"));
-  int state = radio.begin();
-  debug(state != RADIOLIB_ERR_NONE, F("Initialise radio failed"), state, true);
-  
-  Serial.println(F("Initialise LoRaWAN Network credentials"));
-  node.beginABP(devAddr, fNwkSIntKey, sNwkSIntKey, nwkSEncKey, appSKey);
-
-  node.activateABP();
-  debug(state != RADIOLIB_ERR_NONE, F("Activate ABP failed"), state, true);
+  radio_init();
+  GPS_init(gnss);
 
   Serial.println(F("Ready!\n"));
 }
 
-void loop() {
-  Serial.println(F("Sending uplink"));
 
-  // This is the place to gather the sensor inputs
-  // Instead of reading any real sensor, we just generate some random numbers as example
-  uint8_t value1 = radio.random(100);
-  uint16_t value2 = radio.random(2000);
+void loop() {
+  uint8_t uplinkPayload[8];
+  
+  /* acquire GPS coordinates
+  sLonLat_t lat = gnss.getLat();
+  sLonLat_t lon = gnss.getLon();*/
 
   // Build payload byte array
-  /*
-  uint8_t uplinkPayload[3];
-  uplinkPayload[0] = value1;
-  uplinkPayload[1] = highByte(value2);   // See notes for high/lowByte functions
-  uplinkPayload[2] = lowByte(value2);
-  */
-  char uplinkPayload[7] = {'c', 'o', 'l', 'o', 's', 's', 'o'};
+  double lat = 43.4821567;
+  double lon = 89.1572446;
+
+  encodeCoordinates(lat, lon, uplinkPayload);
+  //encodeCoordinates(lat.latitude, lon.lonitude, uplinkPayload);
   
   // Perform an uplink
+  Serial.println(F("Sending uplink"));
   int state = node.sendReceive(uplinkPayload, sizeof(uplinkPayload));    
   debug(state < RADIOLIB_ERR_NONE, F("Error in sendReceive"), state, false);
   
@@ -93,4 +87,48 @@ void loop() {
   
   // Wait until next uplink - observing legal & TTN FUP constraints
   delay(uplinkIntervalSeconds * 1000UL);  // delay needs milli-seconds
+}
+
+/*==================================  Functions  ====================================
+====================================================================================*/
+void GPS_init(DFRobot_GNSS_I2C gnss){
+  Wire.setSDA(PB8); // GPS SDA
+  Wire.setSCL(PB9); // GPS SCL
+  Wire.begin();
+  
+  if(!gnss.begin()){
+    Serial.println(F("no GPS device\n"));
+  }
+  else {
+    Serial.println(F("GPS ready\n"));
+    gnss.enablePower();
+  }
+}
+
+// Function to encode double coordinates into a uint8_t array
+void encodeCoordinates(double latitude, double longitude, uint8_t* payload) {
+  int32_t lat = latitude * 1e7;
+  int32_t lon = longitude * 1e7;
+
+  // Encode latitude into the payload array (4 bytes)
+  payload[0] = (lat >> 24) & 0xFF;
+  payload[1] = (lat >> 16) & 0xFF;
+  payload[2] = (lat >> 8) & 0xFF;
+  payload[3] = lat & 0xFF;
+
+  // Encode longitude into the payload array (4 bytes)
+  payload[4] = (lon >> 24) & 0xFF;
+  payload[5] = (lon >> 16) & 0xFF;
+  payload[6] = (lon >> 8) & 0xFF;
+  payload[7] = lon & 0xFF;
+
+
+  // Print the payload for verification
+  Serial.print("Payload: ");
+  for (int i = 0; i < 8; i++) {
+      Serial.print(payload[i], HEX);
+      if (i < 7) Serial.print(" ");
+  }
+  Serial.println();
+
 }
