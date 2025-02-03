@@ -1,5 +1,4 @@
-#ifndef _RADIOLIB_EX_LORAWAN_CONFIG_H
-#define _RADIOLIB_EX_LORAWAN_CONFIG_H
+#pragma once 
 
 #include <SPI.h>
 #include <RadioLib.h>
@@ -156,4 +155,23 @@ void arrayDump(uint8_t *buffer, uint16_t len) {
   Serial.println();
 }
 
-#endif
+void radio_init(){
+  etx_spi.setSCLK(SCLK_PIN);
+  etx_spi.setMOSI(MOSI_PIN);
+  etx_spi.setMISO(MISO_PIN);
+  etx_spi.begin(); 
+  pinMode(CS_PIN, OUTPUT); 
+  digitalWrite(CS_PIN, HIGH);
+
+  Serial.println(F("Initialise the radio"));
+  int16_t state = radio.begin();
+  debug(state != RADIOLIB_ERR_NONE, F("Initialise radio failed"), state, true);
+
+  // Setup the OTAA session information
+  state = node.beginOTAA(joinEUI, devEUI, nwkKey, appKey);
+  debug(state != RADIOLIB_ERR_NONE, F("Initialise node failed"), state, true);
+
+  Serial.println(F("Join ('login') the LoRaWAN Network"));
+  state = node.activateOTAA();
+  debug(state != RADIOLIB_LORAWAN_NEW_SESSION, F("Join failed"), state, true);
+}

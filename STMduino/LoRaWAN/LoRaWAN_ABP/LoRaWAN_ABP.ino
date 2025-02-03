@@ -36,7 +36,7 @@
 DFRobot_GNSS_I2C gnss(&Wire ,GNSS_DEVICE_ADDR);
 
 void encodeCoordinates(double latitude, double longitude, uint8_t* payload);
-void GPS_init(DFRobot_GNSS_I2C gnss);
+void GPS_init();
 
 /*==================================  MAIN Program  ==================================
 ======================================================================================*/
@@ -46,17 +46,17 @@ void setup() {
   delay(5000);  // Give time to switch to the serial monitor
 
   Serial.println("\nSetup ... ");
-
   radio_init();
-  GPS_init(gnss);
-
+  GPS_init();
   Serial.println(F("Ready!\n"));
 }
 
 
 void loop() {
   uint8_t uplinkPayload[8];
-  
+  uint8_t downlinkPayload[10];
+  size_t  downlinkSize;  
+
   /* acquire GPS coordinates
   sLonLat_t lat = gnss.getLat();
   sLonLat_t lon = gnss.getLon();*/
@@ -70,13 +70,16 @@ void loop() {
   
   // Perform an uplink
   Serial.println(F("Sending uplink"));
-  int state = node.sendReceive(uplinkPayload, sizeof(uplinkPayload));    
+  //int16_t state = node.sendReceive(uplinkPayload, sizeof(uplinkPayload), 8, downlinkPayload, &down_len);    
+  int16_t state = node.sendReceive(uplinkPayload, sizeof(uplinkPayload), 1, downlinkPayload, &downlinkSize, false);
   debug(state < RADIOLIB_ERR_NONE, F("Error in sendReceive"), state, false);
   
   // Check if a downlink was received 
   // (state 0 = no downlink, state 1/2 = downlink in window Rx1/Rx2)
   if(state > 0) {
     Serial.println(F("Received a downlink"));
+    Serial.println(F("Downlink data: "));
+    arrayDump(downlinkPayload, downlinkSize);
   } else {
     Serial.println(F("No downlink received"));
   }
@@ -91,11 +94,10 @@ void loop() {
 
 /*==================================  Functions  ====================================
 ====================================================================================*/
-void GPS_init(DFRobot_GNSS_I2C gnss){
-  Wire.setSDA(PB8); // GPS SDA
-  Wire.setSCL(PB9); // GPS SCL
-  Wire.begin();
-  
+void GPS_init(){
+  Wire.setSDA(PB9);
+  Wire.setSCL(PB8);
+  Wire.begin(); 
   if(!gnss.begin()){
     Serial.println(F("no GPS device\n"));
   }
@@ -122,7 +124,6 @@ void encodeCoordinates(double latitude, double longitude, uint8_t* payload) {
   payload[6] = (lon >> 8) & 0xFF;
   payload[7] = lon & 0xFF;
 
-
   // Print the payload for verification
   Serial.print("Payload: ");
   for (int i = 0; i < 8; i++) {
@@ -130,5 +131,4 @@ void encodeCoordinates(double latitude, double longitude, uint8_t* payload) {
       if (i < 7) Serial.print(" ");
   }
   Serial.println();
-
 }
