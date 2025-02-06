@@ -30,7 +30,8 @@ Radio radio = new RadioModule();
 */
 
 // how often to send an uplink - consider legal & FUP constraints - see notes
-const uint32_t uplinkIntervalSeconds = 5UL * 60UL;    // minutes x seconds
+//const uint32_t uplinkIntervalSeconds = 5UL * 60UL;    // minutes x seconds
+
 
 // joinEUI - previous versions of LoRaWAN called this AppEUI
 // for development purposes you can use all zeros - see wiki for details
@@ -174,4 +175,15 @@ void radio_init(){
   Serial.println(F("Join ('login') the LoRaWAN Network"));
   state = node.activateOTAA();
   debug(state != RADIOLIB_LORAWAN_NEW_SESSION, F("Join failed"), state, true);
+}
+
+bool mod_in(uint8_t *buffer, uint16_t len) {
+  for (uint16_t c = 0; c < len; c++) {
+    if (buffer[c] == 0x01) {
+      return true;
+    }
+    else if (buffer[c] == 0x00) 
+      return false;
+  }
+  return true;
 }

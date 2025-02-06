@@ -27,11 +27,14 @@
 #include "radio.h"
 #include <DFRobot_GNSS.h>
 
+
 // GPS instanciation
 DFRobot_GNSS_I2C gnss(&Wire ,GNSS_DEVICE_ADDR);
 
 void encodeCoordinates(double latitude, double longitude, uint8_t* payload);
 void GPS_init();
+
+uint32_t uplinkIntervalSeconds;
 
 /*==================================  MAIN Program  ==================================
 ======================================================================================*/
@@ -40,11 +43,13 @@ void setup() {
   Serial.begin(115200);
   while(!Serial);
   delay(5000);  // Give time to switch to the serial monitor
-  Serial.println(F("\nSetup ... "));
+  Serial.println(F("\nSetup ... "));    
 
   radio_init();
   GPS_init();
+  
   Serial.println(F("Ready!\n"));
+
 }
 
 void loop() {
@@ -57,11 +62,21 @@ void loop() {
   //acquire GPS coordinates
   sLonLat_t lat = gnss.getLat();
   sLonLat_t lon = gnss.getLon();
-  // Build payload byte array
-  encodeCoordinates(lat.latitude, lon.lonitude, uplinkPayload);
   
-  // Perform an uplink
-  int16_t state = node.sendReceive(uplinkPayload, sizeof(uplinkPayload), 1, downlinkPayload, &downlinkSize, false);   
+  double latt = 43.5592760;
+  double lonn = 1.4694470;
+
+  // Build payload byte array
+  //encodeCoordinates(lat.latitude, lon.lonitude, uplinkPayload);
+  encodeCoordinates(latt, lonn, uplinkPayload);
+
+  // send GPS coordinates
+  int16_t state = node.sendReceive(uplinkPayload, sizeof(uplinkPayload));   
+  debug(state < RADIOLIB_ERR_NONE, F("Error in sendReceive"), state, false);
+  delay(5UL*1000UL);
+
+  // send sleep time request
+  state = node.sendReceive(cmdPayload, sizeof(cmdPayload), 1, downlinkPayload, &downlinkSize, false);
   debug(state < RADIOLIB_ERR_NONE, F("Error in sendReceive"), state, false);
 
   // Check if a downlink was received 
@@ -70,8 +85,18 @@ void loop() {
     Serial.println(F("Received a downlink"));
     Serial.println(F("Downlink data: "));
     arrayDump(downlinkPayload, downlinkSize);
+
+    if (!mod_in(downlinkPayload, downlinkSize)){ 
+      // sheeps breaking out
+      uplinkIntervalSeconds = 15UL * 60UL;
+    } else{
+      // all good
+      uplinkIntervalSeconds = 60UL * 60UL;
+    }
   } else {
+    // no changes    
     Serial.println(F("No downlink received"));
+    uplinkIntervalSeconds = 60UL * 60UL;
   }
 
   Serial.print(F("Next uplink in "));
