@@ -3,35 +3,26 @@
 #include <SPI.h>
 #include <RadioLib.h>
 
-#define MOSI_PIN  PB5   //MOSI Pin
-#define MISO_PIN  PB4   //MISO Pin
-#define SCLK_PIN  PB3   //Clock Pin
-#define CS_PIN    PA8   //Chip Select 
+// Radio module pins
+#define MOSI_PIN  PB5   
+#define MISO_PIN  PB4
+#define SCLK_PIN  PB3   
+#define CS_PIN    PA8   
 
 #define RST_PIN   PB1
 
 #define G0_PIN    PB13
 #define G1_PIN    PB14
 
+// SPI Bus config
 SPIClass etx_spi( MOSI_PIN, MISO_PIN, SCLK_PIN );
 SPISettings spi_Settings(2000000, MSBFIRST, SPI_MODE0);
 
-// first you have to set your radio model and pin configuration
-// RFM96W + SPI configuration
+// setting the radio model and pin configuration : RFM96W + SPI configuration
 SX1276 radio = new Module(CS_PIN, G0_PIN, RST_PIN, G1_PIN, etx_spi, spi_Settings);
-
-// if you have RadioBoards (https://github.com/radiolib-org/RadioBoards)
-// and are using one of the supported boards, you can do the following:
-/*
-#define RADIO_BOARD_AUTO
-#include <RadioBoards.h>
-
-Radio radio = new RadioModule();
-*/
 
 // how often to send an uplink - consider legal & FUP constraints - see notes
 //const uint32_t uplinkIntervalSeconds = 5UL * 60UL;    // minutes x seconds
-
 
 // joinEUI - previous versions of LoRaWAN called this AppEUI
 // for development purposes you can use all zeros - see wiki for details
@@ -39,13 +30,17 @@ Radio radio = new RadioModule();
 
 // the Device EUI & two keys can be generated on the TTN console 
 #ifndef RADIOLIB_LORAWAN_DEV_EUI   // Replace with your Device EUI
-#define RADIOLIB_LORAWAN_DEV_EUI   0x70B3D57ED006D44A
+//#define RADIOLIB_LORAWAN_DEV_EUI    0x70B3D57ED006D44A
+#define RADIOLIB_LORAWAN_DEV_EUI    0x70B3D57ED006E00F
 #endif
 #ifndef RADIOLIB_LORAWAN_APP_KEY   // Replace with your App Key 
-#define RADIOLIB_LORAWAN_APP_KEY   0x4D, 0x96, 0x29, 0x2D, 0xC2, 0x07, 0x9A, 0xE6, 0x84, 0x78, 0xB5, 0x90, 0x77, 0x39, 0x8E, 0x29
+//#define RADIOLIB_LORAWAN_APP_KEY   0x4D, 0x96, 0x29, 0x2D, 0xC2, 0x07, 0x9A, 0xE6, 0x84, 0x78, 0xB5, 0x90, 0x77, 0x39, 0x8E, 0x29
+#define RADIOLIB_LORAWAN_APP_KEY  0x07, 0x80, 0x05, 0xAF, 0x69, 0x5E, 0x66, 0x73, 0xF0, 0xA5, 0x82, 0x19, 0xC9, 0x70, 0x0A, 0x71
 #endif
+
 #ifndef RADIOLIB_LORAWAN_NWK_KEY   // Put your Nwk Key here
-#define RADIOLIB_LORAWAN_NWK_KEY   0xE6, 0x9F, 0xED, 0x8E, 0xFC, 0x44, 0xA7, 0x1C, 0xE4, 0x5F, 0x48, 0x78, 0xB8, 0xF3, 0x5A, 0x9C
+//#define RADIOLIB_LORAWAN_NWK_KEY   0xE6, 0x9F, 0xED, 0x8E, 0xFC, 0x44, 0xA7, 0x1C, 0xE4, 0x5F, 0x48, 0x78, 0xB8, 0xF3, 0x5A, 0x9C
+#define RADIOLIB_LORAWAN_NWK_KEY     0x54, 0xB7, 0xB6, 0xC8, 0xA1, 0xBE, 0x45, 0xB9, 0x00, 0x01, 0xE8, 0x87, 0xB5, 0x15, 0x20, 0xB0
 #endif
 
 // for the curious, the #ifndef blocks allow for automated testing &/or you can
@@ -156,6 +151,7 @@ void arrayDump(uint8_t *buffer, uint16_t len) {
   Serial.println();
 }
 
+// radio initialization function
 void radio_init(){
   etx_spi.setSCLK(SCLK_PIN);
   etx_spi.setMOSI(MOSI_PIN);
@@ -177,6 +173,7 @@ void radio_init(){
   debug(state != RADIOLIB_LORAWAN_NEW_SESSION, F("Join failed"), state, true);
 }
 
+// downlink decoder function
 bool mod_in(uint8_t *buffer, uint16_t len) {
   for (uint16_t c = 0; c < len; c++) {
     if (buffer[c] == 0x01) {

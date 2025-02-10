@@ -26,15 +26,17 @@
 
 #include "radio.h"
 #include <DFRobot_GNSS.h>
-
+//#include <EEPROM.h>
 
 // GPS instanciation
 DFRobot_GNSS_I2C gnss(&Wire ,GNSS_DEVICE_ADDR);
 
+uint32_t uplinkIntervalSeconds;
+int ADR = 0 ; // EEPROM address to store the SLEEP time
+
+// Function prototypes
 void encodeCoordinates(double latitude, double longitude, uint8_t* payload);
 void GPS_init();
-
-uint32_t uplinkIntervalSeconds;
 
 /*==================================  MAIN Program  ==================================
 ======================================================================================*/
@@ -43,28 +45,31 @@ void setup() {
   Serial.begin(115200);
   while(!Serial);
   delay(5000);  // Give time to switch to the serial monitor
-  Serial.println(F("\nSetup ... "));    
+  Serial.println(F("\n---\nSetup ... "));    
 
   radio_init();
   GPS_init();
   
-  Serial.println(F("Ready!\n"));
-
+  Serial.println(F("Ready!"));
 }
 
 void loop() {
-  Serial.println(F("Sending uplink"));
-
+  int SLEEP = 5;
+  //SLEEP = EEPROM.read(ADR); 
+  
+  Serial.println(F("\n---\nSending uplink"));
   uint8_t uplinkPayload[8];
   uint8_t downlinkPayload[10];
   size_t  downlinkSize;  
   
-  //acquire GPS coordinates
+  //acquire GPS coordinates 
+  /*
   sLonLat_t lat = gnss.getLat();
   sLonLat_t lon = gnss.getLon();
+  */
   
   double latt = 43.5592760;
-  double lonn = 1.4694470;
+  double lonn = 10.4694470;
 
   // Build payload byte array
   //encodeCoordinates(lat.latitude, lon.lonitude, uplinkPayload);
@@ -76,7 +81,8 @@ void loop() {
   delay(5UL*1000UL);
 
   // send sleep time request
-  state = node.sendReceive(cmdPayload, sizeof(cmdPayload), 1, downlinkPayload, &downlinkSize, false);
+  uint8_t cmdPayload = 24;
+  state = node.sendReceive(&cmdPayload, sizeof(cmdPayload), 1, downlinkPayload, &downlinkSize, false);
   debug(state < RADIOLIB_ERR_NONE, F("Error in sendReceive"), state, false);
 
   // Check if a downlink was received 
@@ -87,21 +93,31 @@ void loop() {
     arrayDump(downlinkPayload, downlinkSize);
 
     if (!mod_in(downlinkPayload, downlinkSize)){ 
-      // sheeps breaking out
-      uplinkIntervalSeconds = 15UL * 60UL;
+      // sheeps breaking out !!!
+      Serial.println(F("sheep breaking out!!!"));
+      if(SLEEP != 15){
+        SLEEP = 15;
+        //EEPROM.write(ADR, SLEEP);
+      } 
+      uplinkIntervalSeconds = SLEEP * 60UL;
     } else{
       // all good
-      uplinkIntervalSeconds = 60UL * 60UL;
+      Serial.println(F("all good"));
+      if(SLEEP != 60){
+        SLEEP = 60;
+        //EEPROM.write(ADR, SLEEP);
+      }
+      uplinkIntervalSeconds = SLEEP * 60UL;
     }
   } else {
-    // no changes    
+    // no changes - need to store sleep time in NVRAM
     Serial.println(F("No downlink received"));
-    uplinkIntervalSeconds = 60UL * 60UL;
+    uplinkIntervalSeconds = SLEEP * 60UL;
   }
 
   Serial.print(F("Next uplink in "));
   Serial.print(uplinkIntervalSeconds);
-  Serial.println(F(" seconds\n"));
+  Serial.println(F(" seconds\n---\n"));
   
   // Wait until next uplink - observing legal & TTN FUP constraints
   delay(uplinkIntervalSeconds * 1000UL);  // delay needs milli-seconds
