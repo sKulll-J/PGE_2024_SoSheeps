@@ -1,4 +1,4 @@
-24646009175724923
+24642532436502173
 Audio_Module
 Reverb_BTDR-1H
 Digital Reverberation Unit, http://www.belton.co.kr/inc/downfile.php?seq=17&file=pdf (footprint from http://www.uk-electronic.de/PDF/BTDR-1.pdf)
@@ -65813,13 +65813,6 @@ Yellow 5381 Series LED
 0
 2
 2
-LoRa_Breakout
-LoRa_Breakout
-
-
-0
-14
-14
 Module
 A20_OLINUXINO_LIME2
 A20 Olinuxino LIME2, 1.2GHz, 512-1024MB RAM, Micro-SD, NAND or eMMC, 1000Mbit Ethernet
@@ -88374,13 +88367,6 @@ Bluetooth BLE NFC
 0
 39
 39
-RF_Module
-LoRa_EMPREINTE
-
-
-0
-14
-14
 RF_Module
 MCU_Seeed_ESP32C3
 ESP32C3 Seeed Xiao RF Wifi Shield (https://www.seeedstudio.com/blog/wp-content/uploads/2022/08/Seeed-Studio-XIAO-Series-Package-and-PCB-Design.pdf)
