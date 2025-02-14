@@ -116,5 +116,16 @@ void loop() {
 /*==================================   Fonctions  ====================================
 ======================================================================================*/
 void buildLoRaWANPayload(double latitude, double longitude, unsigned long timestamp, char* payload) {
-  snprintf(payload, 100, "5:%.6f:%.6f:20:%lu", latitude, longitude, timestamp);
+  strcpy(payload, "5:");  // Start the payload with "5:"
+  char temp[30];
+  
+  dtostrf(latitude, 9, 7, temp);  // Convert latitude to a string
+  strcat(payload, temp);
+  strcat(payload, ":");
+
+  dtostrf(longitude, 9, 7, temp);  // Convert longitude to a string
+  strcat(payload, temp);
+  strcat(payload, ":20:");
+
+  strcat(payload, String(timestamp).c_str());  // Add the timestamp
 }
