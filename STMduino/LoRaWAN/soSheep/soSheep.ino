@@ -94,6 +94,3 @@ void loop() {
   delay(uplinkIntervalSeconds * 1000UL);  // delay needs milli-seconds  
   
 }
-
-
-

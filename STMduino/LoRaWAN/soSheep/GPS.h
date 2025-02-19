@@ -30,7 +30,4 @@ const Zone predefinedZone = {
 
 void GPS_init();
 bool estDansPolygone(const CoordGPS& point, const CoordGPS* polygone, int vertexCount);
-void encodeCoordinates(double latitude, double longitude, uint8_t* payload);
 void locate(sLonLat_t *lat, sLonLat_t *lon);
-
-

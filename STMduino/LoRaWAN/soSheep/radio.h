@@ -183,3 +183,29 @@ bool mod_in(uint8_t *buffer, uint16_t len) {
   }
   return true;
 }
+
+// Function to encode double coordinates into a uint8_t array
+void encodeCoordinates(double latitude, double longitude, uint8_t* payload) {
+  int32_t lat = latitude * 1e7;
+  int32_t lon = longitude * 1e7;
+
+  // Encode latitude into the payload array (4 bytes)
+  payload[0] = (lat >> 24) & 0xFF;
+  payload[1] = (lat >> 16) & 0xFF;
+  payload[2] = (lat >> 8) & 0xFF;
+  payload[3] = lat & 0xFF;
+
+  // Encode longitude into the payload array (4 bytes)
+  payload[4] = (lon >> 24) & 0xFF;
+  payload[5] = (lon >> 16) & 0xFF;
+  payload[6] = (lon >> 8) & 0xFF;
+  payload[7] = lon & 0xFF;
+
+  // Print the payload for verification
+  Serial.print("Payload: ");
+  for (int i = 0; i < 8; i++) {
+    Serial.print(payload[i], HEX);
+    if (i < 7) Serial.print(" ");
+  }
+  Serial.println();
+}
