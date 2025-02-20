@@ -23,7 +23,7 @@
   https://github.com/jgromes/RadioLib/wiki/LoRaWAN
 
 */
-
+#include "config.h"
 #include "radio.h"
 #include "GPS.h"
 #include "BMS.h"
@@ -38,21 +38,28 @@ float tension = 0.0 ; // Tension initiale
 ======================================================================================*/
 
 void setup() {
-  Serial.begin(115200);
-  while(!Serial);
-  delay(5000);  // Give time to switch to the serial monitor
-  Serial.println(F("\n---\nSetup ... "));    
+  #if DEBUG
+    Serial.begin(115200);
+    while(!Serial);
+    delay(5000);  // Give time to switch to the serial monitor
+    Serial.println(F("\n---\nSetup ... "));    
+  #endif
 
   radio_init();
   GPS_init();
-  
-  Serial.println(F("Ready!"));
+
+  #if DEBUG
+    Serial.println(F("Ready!"));
+  #endif
 }
 
 void loop() {
   int SLEEP = 5;
   
-  Serial.println(F("\n---\nSending uplink"));
+  #if DEBUG
+    Serial.println(F("\n---\nSending uplink"));
+  #endif
+
   uint8_t uplinkPayload[8];
   uint8_t downlinkPayload[10];
   size_t  downlinkSize;  
@@ -81,15 +88,20 @@ void loop() {
   // Check if a downlink was received 
   // (state 0 = no downlink, state 1/2 = downlink in window Rx1/Rx2)
   if(state > 0) {
-    Serial.println(F("Received a downlink"));
-    Serial.println(F("Downlink data: "));
-    arrayDump(downlinkPayload, downlinkSize);
+    #if DEBUG
+      Serial.println(F("Received a downlink"));
+      Serial.println(F("Downlink data: "));
+      arrayDump(downlinkPayload, downlinkSize);
+    #endif
   }
-
-  Serial.print(F("Next uplink in "));
-  Serial.print(uplinkIntervalSeconds);
-  Serial.println(F(" seconds\n---\n"));
   
+  #if DEBUG
+    Serial.print(F("Next uplink in "));
+    Serial.print(uplinkIntervalSeconds);
+    Serial.println(F(" seconds\n---\n"));
+  #endif
+
+
   // Wait until next uplink - observing legal & TTN FUP constraints
   delay(uplinkIntervalSeconds * 1000UL);  // delay needs milli-seconds  
   

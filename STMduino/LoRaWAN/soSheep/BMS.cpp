@@ -9,8 +9,11 @@ float soc_tableau[nb_points] = {100, 80, 50, 20, 5, 0};
 
 // initialization function
 void BMS_init(float* tension, float* SoC){
-  if(bm.begin())
+  if(bm.begin()){
+    #if DEBUG
     Serial.println(bm.isConnected());
+    #endif
+  }
 
   // Lecture des valeurs initiales
   *tension = bm.readVDD();
@@ -18,9 +21,12 @@ void BMS_init(float* tension, float* SoC){
   // Correction de la tension en fonction du courant et init soc
   *SoC = estimerSoC(*tension);
   
-  Serial.print("Initialisation SoC: ");
-  Serial.print(*SoC);
-  Serial.println(" %");
+  #if DEBUG
+    Serial.print("Initialisation SoC: ");
+    Serial.print(*SoC);
+    Serial.println(" %");
+  #endif
+
 }
 
 // Fonction d'interpolation linéaire pour estimer le SoC en fonction de la tension

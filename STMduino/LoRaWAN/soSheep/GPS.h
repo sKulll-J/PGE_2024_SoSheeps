@@ -1,4 +1,5 @@
 #pragma once
+#include "config.h"
 #include <DFRobot_GNSS.h>
 #include <math.h>
 

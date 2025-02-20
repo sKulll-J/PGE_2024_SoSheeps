@@ -1,4 +1,5 @@
 #pragma once
+#include "config.h"
 #include <DS2438.h>
 
 #define ONE_WIRE_BUS 2
