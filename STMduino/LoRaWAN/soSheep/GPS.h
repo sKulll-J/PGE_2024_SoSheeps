@@ -6,6 +6,7 @@
 // Nb sommets maximum pour le polygone
 #define MAX_VERTICES 10
 
+
 // Structure pour les coordonnées GPS
 struct CoordGPS {
   double latitude;
@@ -31,4 +32,5 @@ const Zone predefinedZone = {
 
 void GPS_init();
 bool estDansPolygone(const CoordGPS& point, const CoordGPS* polygone, int vertexCount);
-void locate(sLonLat_t *lat, sLonLat_t *lon);
+void locate(sLonLat_t *pos);
+uint8_t get_nbSat();
