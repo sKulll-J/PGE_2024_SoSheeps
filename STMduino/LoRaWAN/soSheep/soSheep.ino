@@ -44,9 +44,9 @@ void setup() {
     Serial.begin(115200);
     while(!Serial);
     delay(5000);  // Give time to switch to the serial monitor
-    Serial.println(F("\n---\nSetup ... "));    
+    Serial.println(F("---\nSetup ... "));    
   #endif
-
+  
   radio_init();
   GPS_init();
   BMS_init(&tension, &SoC);
@@ -77,7 +77,6 @@ void loop() {
   // send GPS coordinates
   int16_t state = node.sendReceive(uplinkPayload, sizeof(uplinkPayload), 1, downlinkPayload, &downlinkSize, false);   
   debug(state < RADIOLIB_ERR_NONE, F("Error in sendReceive"), state, false);
-  delay(5UL*1000UL);
 
   // Check if a downlink was received 
     // (state 0 = no downlink, state 1/2 = downlink in window Rx1/Rx2)
@@ -88,6 +87,20 @@ void loop() {
         arrayDump(downlinkPayload, downlinkSize);
       #endif
     }
+  
+  // Change sleep time
+  CoordGPS Point {
+    position.latitude, position.lonitude
+  };
+
+  if ( estDansPolygone(Point, predefinedZone.sommets, predefinedZone.vertexCount) == 1 ){
+    Serial.println(F("inside"));
+    uplinkIntervalSeconds = 5 * 60UL;
+  }
+  else{
+    Serial.println(F("outside"));
+    uplinkIntervalSeconds = 2 * 60UL;
+  }
   
   #if DEBUG
     Serial.print(F("Next uplink in "));
