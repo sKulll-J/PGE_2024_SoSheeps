@@ -41,9 +41,9 @@ bool estDansPolygone(const CoordGPS& point, const CoordGPS* polygone, int vertex
   return dedans;
 }
 
-void locate(sLonLat_t *pos){
-  *pos = gnss.getLat();
-  *pos = gnss.getLon();
+void locate(sLonLat_t *lat, sLonLat_t *lon){
+  *lat = gnss.getLat();
+  *lon = gnss.getLon();
 }
 
 uint8_t get_nbSat(){

@@ -46,7 +46,7 @@ void setup() {
     delay(5000);  // Give time to switch to the serial monitor
     Serial.println(F("---\nSetup ... "));    
   #endif
-  
+
   radio_init();
   GPS_init();
   BMS_init(&tension, &SoC);
@@ -60,8 +60,16 @@ void loop() {
   uint8_t battery = getBatteryCharge();
 
   //acquire GPS coordinates 
-  sLonLat_t position ;
-  locate(&position) ;
+  sLonLat_t lat, lon ;
+  locate(&lat, &lon) ;
+
+  #if DEBUG
+    Serial.println(F("coordinates | "));
+    Serial.print(lat.latitudeDegree,6);
+    Serial.print(F("\t | "));
+    Serial.println(lon.lonitudeDegree,6);
+  #endif
+
 
   #if DEBUG
     Serial.println(F("\n---\nSending uplink"));
@@ -72,7 +80,7 @@ void loop() {
   size_t  downlinkSize;  
 
   // Build payload byte array
-  encodeCoordinates(position.latitude, position.lonitude, get_nbSat(), battery, uplinkPayload);
+  encodeCoordinates(lat.latitudeDegree, lon.lonitudeDegree, get_nbSat(), battery, uplinkPayload);
 
   // send GPS coordinates
   int16_t state = node.sendReceive(uplinkPayload, sizeof(uplinkPayload), 1, downlinkPayload, &downlinkSize, false);   
@@ -90,7 +98,7 @@ void loop() {
   
   // Change sleep time
   CoordGPS Point {
-    position.latitude, position.lonitude
+    lat.latitudeDegree, lon.lonitudeDegree
   };
 
   if ( estDansPolygone(Point, predefinedZone.sommets, predefinedZone.vertexCount) == 1 ){
