@@ -1,0 +1,119 @@
+{
+  "project_info": {
+    "project_number": "442978295899",
+    "firebase_url": "https://delta-ebd4f-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "delta-ebd4f",
+    "storage_bucket": "delta-ebd4f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:442978295899:android:b7bd29ebb331ce14ecdf7e",
+        "android_client_info": {
+          "package_name": "com.example.lala"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "442978295899-mqhfutid7oqi4ulgng9907khppi32ciq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAOwYd9mtiNl_f0v00mEn4kZzIn3yyFU3c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "442978295899-mqhfutid7oqi4ulgng9907khppi32ciq.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "442978295899-2ltsq77bgt60vajn08n2o1sa3t7ltobm.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.rechercheMoutonApp"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:442978295899:android:a35380186e5f0db2ecdf7e",
+        "android_client_info": {
+          "package_name": "com.example.recherche_mouton_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "442978295899-mqhfutid7oqi4ulgng9907khppi32ciq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAOwYd9mtiNl_f0v00mEn4kZzIn3yyFU3c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "442978295899-mqhfutid7oqi4ulgng9907khppi32ciq.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "442978295899-2ltsq77bgt60vajn08n2o1sa3t7ltobm.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.rechercheMoutonApp"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:442978295899:android:61fe99dba4138097ecdf7e",
+        "android_client_info": {
+          "package_name": "com.example.youtube_tuto"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "442978295899-mqhfutid7oqi4ulgng9907khppi32ciq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAOwYd9mtiNl_f0v00mEn4kZzIn3yyFU3c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "442978295899-mqhfutid7oqi4ulgng9907khppi32ciq.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "442978295899-2ltsq77bgt60vajn08n2o1sa3t7ltobm.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.rechercheMoutonApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
