@@ -1,4 +1,6 @@
-#pragma once0 
+#pragma once
+
+#include "config.h"
 #include <SPI.h>
 #include <RadioLib.h>
 
@@ -19,31 +21,6 @@ SPISettings spi_Settings(2000000, MSBFIRST, SPI_MODE0);
 
 // setting the radio model and pin configuration : RFM96W + SPI configuration
 SX1276 radio = new Module(CS_PIN, G0_PIN, RST_PIN, G1_PIN, etx_spi, spi_Settings);
-
-// how often to send an uplink - consider legal & FUP constraints - see notes
-//const uint32_t uplinkIntervalSeconds = 5UL * 60UL;    // minutes x seconds
-
-// joinEUI - previous versions of LoRaWAN called this AppEUI
-// for development purposes you can use all zeros - see wiki for details
-#define RADIOLIB_LORAWAN_JOIN_EUI  0x0000000000000000
-
-// the Device EUI & two keys can be generated on the TTN console 
-#ifndef RADIOLIB_LORAWAN_DEV_EUI   // Replace with your Device EUI
-//#define RADIOLIB_LORAWAN_DEV_EUI    0x70B3D57ED006D44A
-#define RADIOLIB_LORAWAN_DEV_EUI    0x70B3D57ED006E00F
-#endif
-#ifndef RADIOLIB_LORAWAN_APP_KEY   // Replace with your App Key 
-//#define RADIOLIB_LORAWAN_APP_KEY   0x4D, 0x96, 0x29, 0x2D, 0xC2, 0x07, 0x9A, 0xE6, 0x84, 0x78, 0xB5, 0x90, 0x77, 0x39, 0x8E, 0x29
-#define RADIOLIB_LORAWAN_APP_KEY  0x07, 0x80, 0x05, 0xAF, 0x69, 0x5E, 0x66, 0x73, 0xF0, 0xA5, 0x82, 0x19, 0xC9, 0x70, 0x0A, 0x71
-#endif
-
-#ifndef RADIOLIB_LORAWAN_NWK_KEY   // Put your Nwk Key here
-//#define RADIOLIB_LORAWAN_NWK_KEY   0xE6, 0x9F, 0xED, 0x8E, 0xFC, 0x44, 0xA7, 0x1C, 0xE4, 0x5F, 0x48, 0x78, 0xB8, 0xF3, 0x5A, 0x9C
-#define RADIOLIB_LORAWAN_NWK_KEY     0x54, 0xB7, 0xB6, 0xC8, 0xA1, 0xBE, 0x45, 0xB9, 0x00, 0x01, 0xE8, 0x87, 0xB5, 0x15, 0x20, 0xB0
-#endif
-
-// for the curious, the #ifndef blocks allow for automated testing &/or you can
-// put your EUI & keys in to your platformio.ini - see wiki for more tips
 
 // regional choices: EU868, US915, AU915, AS923, AS923_2, AS923_3, AS923_4, IN865, KR920, CN500
 const LoRaWANBand_t Region = EU868;
@@ -128,17 +105,22 @@ String stateDecode(const int16_t result) {
 }
 
 // helper function to display any issues
+#if DEBUG
 void debug(bool failed, const __FlashStringHelper* message, int state, bool halt) {
   if(failed) {
-    Serial.print(message);
-    Serial.print(" - ");
-    Serial.print(stateDecode(state));
-    Serial.print(" (");
-    Serial.print(state);
-    Serial.println(")");
+    #if DEBUG
+      Serial.print(message);
+      Serial.print(" - ");
+      Serial.print(stateDecode(state));
+      Serial.print(" (");
+      Serial.print(state);
+      Serial.println(")");
+    #endif
     while(halt) { delay(1); }
   }
 }
+#endif
+
 
 // helper function to display a byte array
 void arrayDump(uint8_t *buffer, uint16_t len) {
@@ -159,17 +141,89 @@ void radio_init(){
   pinMode(CS_PIN, OUTPUT); 
   digitalWrite(CS_PIN, HIGH);
 
-  Serial.println(F("Initialise the radio"));
-  int16_t state = radio.begin();
-  debug(state != RADIOLIB_ERR_NONE, F("Initialise radio failed"), state, true);
 
+  #if DEBUG
+    Serial.println(F("Initialise the radio"));
+  #endif
+
+  int16_t state = radio.begin();
+    #if DEBUG
+      debug(state != RADIOLIB_ERR_NONE, F("Initialise radio failed"), state, true);
+    #endif
+  
   // Setup the OTAA session information
   state = node.beginOTAA(joinEUI, devEUI, nwkKey, appKey);
-  debug(state != RADIOLIB_ERR_NONE, F("Initialise node failed"), state, true);
+    #if DEBUG
+      debug(state != RADIOLIB_ERR_NONE, F("Initialise node failed"), state, true);
+    #endif
+  
+  #if DEBUG
+    Serial.println(F("Join ('login') the LoRaWAN Network"));
+  #endif
 
-  Serial.println(F("Join ('login') the LoRaWAN Network"));
   state = node.activateOTAA();
-  debug(state != RADIOLIB_LORAWAN_NEW_SESSION, F("Join failed"), state, true);
+    #if DEBUG
+      debug(state != RADIOLIB_LORAWAN_NEW_SESSION, F("Join failed"), state, true);
+    #endif
+}
+
+// Function to encode double coordinates into a uint8_t array
+void encodeCoordinates(double latitude, double longitude, uint8_t* payload) {
+  int32_t lat = latitude * 1e7;
+  int32_t lon = longitude * 1e7;
+
+  // Encode latitude into the payload array (4 bytes)
+  payload[0] = (lat >> 24) & 0xFF;
+  payload[1] = (lat >> 16) & 0xFF;
+  payload[2] = (lat >> 8) & 0xFF;
+  payload[3] = lat & 0xFF;
+
+  // Encode longitude into the payload array (4 bytes)
+  payload[4] = (lon >> 24) & 0xFF;
+  payload[5] = (lon >> 16) & 0xFF;
+  payload[6] = (lon >> 8) & 0xFF;
+  payload[7] = lon & 0xFF;
+  
+  #if DEBUG // Print the payload for verification
+    Serial.print("Payload: ");
+    for (int i = 0; i < 8; i++) {
+      Serial.print(payload[i], HEX);
+      if (i < 7) Serial.print(" ");
+    }
+    Serial.println();
+  #endif
+}
+
+void encodeCoordinates(double latitude, double longitude, uint8_t nb_sat, uint8_t batt_level, uint8_t* payload) {
+  int32_t lat = latitude * 1e7;
+  int32_t lon = longitude * 1e7;
+
+  // Encode latitude into the payload array (4 bytes)
+  payload[0] = (lat >> 24) & 0xFF;
+  payload[1] = (lat >> 16) & 0xFF;
+  payload[2] = (lat >> 8) & 0xFF;
+  payload[3] = lat & 0xFF;
+
+  // Encode longitude into the payload array (4 bytes)
+  payload[4] = (lon >> 24) & 0xFF;
+  payload[5] = (lon >> 16) & 0xFF;
+  payload[6] = (lon >> 8) & 0xFF;
+  payload[7] = lon & 0xFF;
+
+  // Encode satellites number
+  payload[8] = nb_sat ;
+  
+  // Encode battery level
+  payload[9] = batt_level ;
+  
+  #if DEBUG // Print the payload for verification
+    Serial.print("Payload: ");
+    for (int i = 0; i < 8; i++) {
+      Serial.print(payload[i], HEX);
+      if (i < 7) Serial.print(" ");
+    }
+    Serial.println();
+  #endif
 }
 
 // downlink decoder function
@@ -183,3 +237,4 @@ bool mod_in(uint8_t *buffer, uint16_t len) {
   }
   return true;
 }
+

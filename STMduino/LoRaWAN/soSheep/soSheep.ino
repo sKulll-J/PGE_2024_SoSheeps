@@ -24,6 +24,8 @@
 
 */
 
+#include "STM32LowPower.h"
+#include "config.h"
 #include "radio.h"
 #include "GPS.h"
 #include "BMS.h"
@@ -38,62 +40,83 @@ float tension = 0.0 ; // Tension initiale
 ======================================================================================*/
 
 void setup() {
-  Serial.begin(115200);
-  while(!Serial);
-  delay(5000);  // Give time to switch to the serial monitor
-  Serial.println(F("\n---\nSetup ... "));    
+  #if DEBUG
+    Serial.begin(115200);
+    while(!Serial);
+    delay(5000);  // Give time to switch to the serial monitor
+    Serial.println(F("---\nSetup ... "));    
+  #endif
 
   radio_init();
   GPS_init();
-  
-  Serial.println(F("Ready!"));
+  BMS_init(&tension, &SoC);
+
+  #if DEBUG
+    Serial.println(F("Ready!"));
+  #endif
 }
 
-void loop() {
-  int SLEEP = 5;
-  
-  Serial.println(F("\n---\nSending uplink"));
-  uint8_t uplinkPayload[8];
+void loop() {  
+  uint8_t battery = getBatteryCharge();
+
+  //acquire GPS coordinates 
+  sLonLat_t lat, lon ;
+  locate(&lat, &lon) ;
+
+  #if DEBUG
+    Serial.println(F("coordinates | "));
+    Serial.print(lat.latitudeDegree,6);
+    Serial.print(F("\t | "));
+    Serial.println(lon.lonitudeDegree,6);
+  #endif
+
+
+  #if DEBUG
+    Serial.println(F("\n---\nSending uplink"));
+  #endif
+
+  uint8_t uplinkPayload[10];
   uint8_t downlinkPayload[10];
   size_t  downlinkSize;  
-  
-  //acquire GPS coordinates 
-  //sLonLat_t lat, lon ;
-  //locate(&lat, &lon) ;
-  
-  double latt = 43.5592760;
-  double lonn = 1.4694470;
 
   // Build payload byte array
-  //encodeCoordinates(lat.latitude, lon.lonitude, uplinkPayload);
-  encodeCoordinates(latt, lonn, uplinkPayload);
+  encodeCoordinates(lat.latitudeDegree, lon.lonitudeDegree, get_nbSat(), battery, uplinkPayload);
 
   // send GPS coordinates
-  int16_t state = node.sendReceive(uplinkPayload, sizeof(uplinkPayload));   
-  debug(state < RADIOLIB_ERR_NONE, F("Error in sendReceive"), state, false);
-  delay(5UL*1000UL);
-
-  // send sleep time request
-  uint8_t cmdPayload = 24;
-  state = node.sendReceive(&cmdPayload, sizeof(cmdPayload), 1, downlinkPayload, &downlinkSize, false);
+  int16_t state = node.sendReceive(uplinkPayload, sizeof(uplinkPayload), 1, downlinkPayload, &downlinkSize, false);   
   debug(state < RADIOLIB_ERR_NONE, F("Error in sendReceive"), state, false);
 
   // Check if a downlink was received 
-  // (state 0 = no downlink, state 1/2 = downlink in window Rx1/Rx2)
-  if(state > 0) {
-    Serial.println(F("Received a downlink"));
-    Serial.println(F("Downlink data: "));
-    arrayDump(downlinkPayload, downlinkSize);
-  }
-
-  Serial.print(F("Next uplink in "));
-  Serial.print(uplinkIntervalSeconds);
-  Serial.println(F(" seconds\n---\n"));
+    // (state 0 = no downlink, state 1/2 = downlink in window Rx1/Rx2)
+    if(state > 0) {
+      #if DEBUG
+        Serial.println(F("Received a downlink"));
+        Serial.println(F("Downlink data: "));
+        arrayDump(downlinkPayload, downlinkSize);
+      #endif
+    }
   
+  // Change sleep time
+  CoordGPS Point {
+    lat.latitudeDegree, lon.lonitudeDegree
+  };
+
+  if ( estDansPolygone(Point, predefinedZone.sommets, predefinedZone.vertexCount) == 1 ){
+    Serial.println(F("inside"));
+    uplinkIntervalSeconds = 5 * 60UL;
+  }
+  else{
+    Serial.println(F("outside"));
+    uplinkIntervalSeconds = 2 * 60UL;
+  }
+  
+  #if DEBUG
+    Serial.print(F("Next uplink in "));
+    Serial.print(uplinkIntervalSeconds);
+    Serial.println(F(" seconds\n---\n"));
+  #endif
+
   // Wait until next uplink - observing legal & TTN FUP constraints
   delay(uplinkIntervalSeconds * 1000UL);  // delay needs milli-seconds  
   
 }
-
-
-

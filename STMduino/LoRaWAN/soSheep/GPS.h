@@ -1,9 +1,11 @@
 #pragma once
+#include "config.h"
 #include <DFRobot_GNSS.h>
 #include <math.h>
 
 // Nb sommets maximum pour le polygone
 #define MAX_VERTICES 10
+
 
 // Structure pour les coordonnées GPS
 struct CoordGPS {
@@ -20,17 +22,15 @@ struct Zone {
 // Define the constant Zone with predefined coordinates
 const Zone predefinedZone = {
   {  // ex: salle H0
-    {43.559409, 1.469427},
-    {43.559340, 1.469288},
-    {43.559185, 1.469443},
-    {43.559257, 1.469582}
+    {43.558980, 1.469207},
+    {43.559507, 1.468677},
+    {43.559810, 1.469402},
+    {43.559326, 1.470138}
   },
   4 // Nb sommets
 };
 
 void GPS_init();
 bool estDansPolygone(const CoordGPS& point, const CoordGPS* polygone, int vertexCount);
-void encodeCoordinates(double latitude, double longitude, uint8_t* payload);
 void locate(sLonLat_t *lat, sLonLat_t *lon);
-
-
+uint8_t get_nbSat();
