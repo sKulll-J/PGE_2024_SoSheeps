@@ -1382,11 +1382,11 @@ class _MapPageState extends State<MapPage> with SingleTickerProviderStateMixin {
           FlutterMap(
             mapController: _mapController,
             options: MapOptions(
-              center: LatLng(43.5599, 1.4694734),
-              zoom: 18.0,
+              //center: LatLng(43.5599, 1.4694734),
+              initialZoom: 18.0,
               minZoom: 5.0,
               maxZoom: 18,
-              interactiveFlags: InteractiveFlag.all & ~InteractiveFlag.rotate,
+              //interactiveFlags: InteractiveFlag.all & ~InteractiveFlag.rotate,
               onTap: (tapPosition, point) {
                 // Traitement du tap lors du mode dessin
                 if (!isDrawing) return;
@@ -1426,7 +1426,7 @@ class _MapPageState extends State<MapPage> with SingleTickerProviderStateMixin {
                     color: fieldColors[entry.key].withOpacity(0.4),
                     borderColor: borderColors[entry.key],
                     borderStrokeWidth: 2,
-                    isFilled: true,
+                    //isFilled: true,
                   );
                 }).toList(),
               ),
@@ -1456,33 +1456,28 @@ class _MapPageState extends State<MapPage> with SingleTickerProviderStateMixin {
                       final centerLng = entry.value.map((p) => p.longitude).reduce((a, b) => a + b) / entry.value.length;
                       return Marker(
                         point: LatLng(centerLat, centerLng),
-                        builder: (context) => GestureDetector(
+                        width: 40,   // obligatoire
+                        height: 40,  // obligatoire
+                        child: GestureDetector(
                           onTap: () {
-                            // Appel à la boîte de dialogue pour changer le type du champ
-                            showChangeTypeDialog(context, fieldIds[entry.key], fieldTypes[entry.key], changeTypeChamp);
+                            showChangeTypeDialog(
+                              context,
+                              fieldIds[entry.key],
+                              fieldTypes[entry.key],
+                              changeTypeChamp,
+                            );
                           },
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                            decoration: BoxDecoration(
-                              color: Colors.black.withOpacity(0.7),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            constraints: const BoxConstraints(minWidth: 4, maxWidth: 20),
-                            child: RichText(
-                              text: TextSpan(
-                                text: fieldNames.length > entry.key ? fieldNames[entry.key] : 'Inconnu',
-                                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
-                              ),
-                              overflow: TextOverflow.visible,
-                              maxLines: 1,
-                            ),
+                          child: Icon(
+                            Icons.location_on,
+                            color: Colors.red,
+                            size: 35,
                           ),
                         ),
                       );
                     } else {
                       return Marker(
                         point: LatLng(0, 0),
-                        builder: (context) => const SizedBox(),
+                        child:  SizedBox(),
                       );
                     }
                   }),
@@ -1492,7 +1487,7 @@ class _MapPageState extends State<MapPage> with SingleTickerProviderStateMixin {
                       point: userPosition!,
                       width: 50,
                       height: 50,
-                      builder: (context) => Transform.rotate(
+                      child: Transform.rotate(
                         angle: _userHeading * (pi / 180), // Conversion degrés → radians
                         child: const Icon(
                           Icons.navigation, // Flèche directionnelle
@@ -1501,11 +1496,19 @@ class _MapPageState extends State<MapPage> with SingleTickerProviderStateMixin {
                         ),
                       ),
                     ),
+
                   // Marqueurs pour les points temporaires du dessin
                   ...temporaryPoints.map((point) => Marker(
                     point: point,
-                    builder: (context) => const Icon(Icons.location_on, color: Colors.red, size: 24),
+                    width: 30,   // tu peux ajuster selon la taille
+                    height: 30,
+                    child: const Icon(
+                      Icons.location_on,
+                      color: Colors.red,
+                      size: 24,
+                    ),
                   )),
+
                 ],
               ),
               // Couche des marqueurs pour les animaux (colliers)
@@ -1537,7 +1540,7 @@ class _MapPageState extends State<MapPage> with SingleTickerProviderStateMixin {
                       point: position,
                       width: 40.0,
                       height: 40.0,
-                      builder: (context) => GestureDetector(
+                      child: GestureDetector(
                         onTap: () {
                           print("📌 Collier cliqué: $collarName");
                           _showSheepDetails(context, collarName, collarID, batteryLevel, receivedAt);

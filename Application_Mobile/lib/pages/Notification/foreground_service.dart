@@ -28,15 +28,20 @@ Future<bool> hasInternetConnection() async {
 }
 
 Future<void> onStart(ServiceInstance service) async {
+  if (service is AndroidServiceInstance) {
+    // 1️⃣ Démarre le service foreground immédiatement
+    service.setAsForegroundService();
+
+    // 2️⃣ Configure la notification immédiatement
+    service.setForegroundNotificationInfo(
+      title: "SOSheep Service",
+      content: "Le service de localisation est actif",
+    );
+    print("service démaré");
+  }
   await Firebase.initializeApp();
 
-  if (service is AndroidServiceInstance) {
-    service.setForegroundNotificationInfo(
-      title: "Application en arrière-plan",
-      content: "Le service de surveillance des colliers est actif",
-    );
-  }
-
+  print("app inisialized");
   // 📡 Vérification de la connexion Internet toutes les 5 secondes
   _internetCheckTimer = Timer.periodic(const Duration(seconds: 5), (timer) async {
     bool isConnected = await hasInternetConnection();
@@ -206,6 +211,7 @@ Future<void> initializeService() async {
       onStart: onStart,
       autoStart: true,
       isForegroundMode: true,
+      foregroundServiceTypes: [AndroidForegroundType.location, AndroidForegroundType.remoteMessaging],
     ),
     iosConfiguration: IosConfiguration(
       autoStart: true,
@@ -214,3 +220,4 @@ Future<void> initializeService() async {
   );
   service.startService();
 }
+

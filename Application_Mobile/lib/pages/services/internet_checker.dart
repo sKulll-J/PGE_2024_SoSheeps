@@ -3,12 +3,15 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 
 class InternetService {
   final Connectivity _connectivity = Connectivity();
-  StreamSubscription<ConnectivityResult>? _subscription;
+  StreamSubscription<List<ConnectivityResult>>? _subscription;
   Function(bool isConnected)? onConnectionChange;
 
   InternetService({this.onConnectionChange}) {
-    _subscription = _connectivity.onConnectivityChanged.listen((result) {
-      bool isConnected = result != ConnectivityResult.none;
+    _subscription = _connectivity.onConnectivityChanged.listen((results) {
+      // results est une List<ConnectivityResult>
+      final bool isConnected = results.isNotEmpty &&
+          results.any((r) => r != ConnectivityResult.none);
+
       if (onConnectionChange != null) {
         onConnectionChange!(isConnected);
       }
@@ -16,8 +19,11 @@ class InternetService {
   }
 
   Future<bool> isConnected() async {
-    ConnectivityResult result = await _connectivity.checkConnectivity();
-    return result != ConnectivityResult.none;
+    List<ConnectivityResult> results = await _connectivity.checkConnectivity();
+
+    bool isConnected = results.isNotEmpty &&
+        results.any((r) => r != ConnectivityResult.none);
+    return isConnected;
   }
 
   void dispose() {

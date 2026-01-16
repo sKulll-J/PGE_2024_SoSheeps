@@ -8,6 +8,12 @@ plugins {
     id "dev.flutter.flutter-gradle-plugin"
 }
 
+configurations.all {
+    resolutionStrategy {
+        force 'androidx.browser:browser:1.8.0'
+    }
+}
+
 android {
     compileSdkVersion 33
     namespace = "com.example.youtube_tuto"
@@ -29,7 +35,7 @@ android {
         applicationId = "com.example.youtube_tuto"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdkVersion 23
+        minSdkVersion flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
@@ -45,12 +51,13 @@ android {
 }
 dependencies {
     // Dépendance pour le désugaring
-    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.2.2'
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.4'
 
     implementation platform('com.google.firebase:firebase-bom:32.0.0') // ✅ Firebase BOM
     // Exemple d'autres dépendances (si besoin)
     implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'com.google.firebase:firebase-messaging:23.2.1'
+
 }
 
 

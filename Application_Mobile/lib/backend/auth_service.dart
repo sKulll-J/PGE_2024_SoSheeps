@@ -4,30 +4,41 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final GoogleSignIn _googleSignIn = GoogleSignIn.instance;
 
   // 🔥 Connexion avec Google
-  Future<User?> signInWithGoogle() async {
+  Future<GoogleSignInAccount?> signInWithGoogle() async {
     try {
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-      if (googleUser == null) {
-        return null; // Utilisateur a annulé la connexion
+      // 1) Essayer une connexion "légère" (silencieuse équivalente)
+      final GoogleSignInAccount? lightUser =
+      await _googleSignIn.attemptLightweightAuthentication(reportAllExceptions: false);
+
+      if (lightUser != null) {
+        // connecté silencieusement
+        return lightUser;
       }
 
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-      final OAuthCredential credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
+      // 2) Si la tentative légère n'a pas donné d'utilisateur, lancer le flux interactif.
+      //    ATTENTION : sur certaines plateformes l'appel à authenticate() doit être effectué
+      //    *dans* un user gesture (bouton press). Vérifie authorizationRequiresUserInteraction().
+      final bool needsUserGesture = _googleSignIn.authorizationRequiresUserInteraction();
+
+      if (needsUserGesture) {
+        // Si tu appelles depuis un handler de bouton, c'est OK d'appeler authenticate ici.
+        // Exemple : onPressed: () async { await signInWithGoogle(); }
+      }
+
+      // Lance le flux interactif (équivalent moderne de l'ancien signIn()).
+      final GoogleSignInAccount user = await _googleSignIn.authenticate(
+        scopeHint: <String>['email', 'profile'], // ajoute d'autres scopes si besoin
       );
 
-      final UserCredential userCredential = await _auth.signInWithCredential(credential);
-      return userCredential.user;
-    } catch (e) {
-      print("❌ Erreur lors de la connexion Google: $e");
+      return user;
+    } catch (error) {
+      print("Erreur lors de la connexion Google : $error");
       return null;
     }
   }
-
 
   // Sign in with email and password
   Future<User?> signInWithEmailPassword(String email, String password) async {

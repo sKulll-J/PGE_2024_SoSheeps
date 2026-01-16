@@ -50,9 +50,10 @@ class _LoginPageState extends State<LoginPage> {
     });
 
     // Écoute des changements de connexion
-    Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+    Connectivity().onConnectivityChanged.listen((List<ConnectivityResult> results) {
       setState(() {
-        _isConnected = result != ConnectivityResult.none;
+        // Si la liste contient autre chose que "none", alors on est connecté
+        _isConnected = !results.contains(ConnectivityResult.none);
       });
     });
   }/*
